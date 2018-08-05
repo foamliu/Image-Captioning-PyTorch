@@ -15,14 +15,10 @@ from config import train_annotations_filename
 from config import train_folder, valid_folder, test_a_folder, test_b_folder
 from config import train_image_folder, valid_image_folder, test_a_image_folder, test_b_image_folder
 from config import valid_annotations_filename
+from utils import ensure_folder
 
 image_model = VGG16(input_shape=(img_rows, img_cols, channel), include_top=False, weights='imagenet',
                     pooling=None)
-
-
-def ensure_folder(folder):
-    if not os.path.exists(folder):
-        os.makedirs(folder)
 
 
 def extract(folder):

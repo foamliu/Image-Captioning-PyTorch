@@ -8,7 +8,7 @@ from keras.utils import multi_gpu_model
 from config import patience, epochs, num_train_samples, num_valid_samples, batch_size
 from data_generator import train_gen, valid_gen
 from model import build_model
-from utils import get_available_gpus, get_available_cpus
+from utils import get_available_gpus, get_available_cpus, ensure_folder
 
 if __name__ == '__main__':
     # Parse arguments
@@ -17,6 +17,7 @@ if __name__ == '__main__':
     args = vars(ap.parse_args())
     pretrained_path = args["pretrained"]
     checkpoint_models_path = 'models/'
+    ensure_folder('models/')
 
     # Callbacks
     tensor_board = keras.callbacks.TensorBoard(log_dir='./logs', histogram_freq=0, write_graph=True, write_images=True)

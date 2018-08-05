@@ -5,6 +5,9 @@ import tensorflow as tf
 from tensorflow.python.client import device_lib
 
 
+def ensure_folder(folder):
+    if not os.path.exists(folder):
+        os.makedirs(folder)
 
 
 # getting the number of GPUs
