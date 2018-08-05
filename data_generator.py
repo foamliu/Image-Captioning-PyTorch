@@ -8,7 +8,7 @@ from keras.applications.vgg16 import VGG16
 from keras.preprocessing import sequence
 from keras.utils import Sequence
 
-from config import batch_size, max_token_length, vocab_size, train_image_folder, valid_image_folder, img_size
+from config import batch_size, max_token_length, vocab_size, train_image_folder, valid_image_folder, img_size, L
 
 
 class DataGenSequence(Sequence):
@@ -47,7 +47,8 @@ class DataGenSequence(Sequence):
 
         length = min(batch_size, (len(self.samples) - i))
         batch_image_input = np.empty((length, 7, 7, 512), dtype=np.float32)
-        batch_target = np.empty((length, vocab_size), dtype=np.int32)
+        caption_target = np.empty((length, vocab_size), dtype=np.int32)
+        alpha_target = np.zeros((length, L), dtype=np.float32)
         text_input = []
 
         for i_batch in range(length):
@@ -57,10 +58,10 @@ class DataGenSequence(Sequence):
             batch_image_input[i_batch] = image_input
 
             text_input.append(sample['input'])
-            batch_target[i_batch] = keras.utils.to_categorical(sample['output'], vocab_size)
+            caption_target[i_batch] = keras.utils.to_categorical(sample['output'], vocab_size)
 
         batch_text_input = sequence.pad_sequences(text_input, maxlen=max_token_length, padding='post')
-        return [batch_image_input, batch_text_input], batch_target
+        return [batch_image_input, batch_text_input], [caption_target, alpha_target]
 
     def on_epoch_end(self):
         np.random.shuffle(self.samples)
