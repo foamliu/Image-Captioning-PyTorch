@@ -4,21 +4,20 @@ import pickle
 import zipfile
 
 import jieba
-from keras.applications.vgg16 import VGG16
-from keras.models import Model
+import numpy as np
+from keras.applications.vgg16 import VGG16, preprocess_input
+from keras.preprocessing.image import (load_img, img_to_array)
 from tqdm import tqdm
 
 from config import img_rows, img_cols, channel
 from config import start_word, stop_word, unknown_word
 from config import train_annotations_filename
 from config import train_folder, valid_folder, test_a_folder, test_b_folder
+from config import train_image_folder, valid_image_folder, test_a_image_folder, test_b_image_folder
 from config import valid_annotations_filename
 
-image_encoder = VGG16(input_shape=(img_rows, img_cols, channel), include_top=False, weights='imagenet',
-                      pooling=None)
-image_input = image_encoder.layers[0].input
-x = image_encoder.layers[-2].output
-image_model = Model(inputs=image_input, outputs=x)
+image_model = VGG16(input_shape=(img_rows, img_cols, channel), include_top=False, weights='imagenet',
+                    pooling=None)
 
 
 def ensure_folder(folder):
@@ -31,6 +30,40 @@ def extract(folder):
     print('Extracting {}...'.format(filename))
     with zipfile.ZipFile(filename, 'r') as zip_ref:
         zip_ref.extractall('data')
+
+
+def encode_images(usage):
+    encoding = {}
+    if usage == 'train':
+        image_folder = train_image_folder
+    elif usage == 'valid':
+        image_folder = valid_image_folder
+    elif usage == 'test_a':
+        image_folder = test_a_image_folder
+    else:  # usage == 'test_b':
+        image_folder = test_b_image_folder
+    batch_size = 256
+    names = [f for f in os.listdir(image_folder) if f.endswith('.jpg')]
+    num_batches = int(np.ceil(len(names) / float(batch_size)))
+    print('encoding {} images'.format(usage))
+    for idx in tqdm(range(num_batches)):
+        i = idx * batch_size
+        length = min(batch_size, (len(names) - i))
+        image_input = np.empty((length, img_rows, img_cols, 3))
+        for i_batch in range(length):
+            image_name = names[i + i_batch]
+            filename = os.path.join(image_folder, image_name)
+            img = load_img(filename, target_size=(img_rows, img_cols))
+            img_array = img_to_array(img)
+            img_array = preprocess_input(img_array)
+            image_input[i_batch] = img_array
+        preds = image_model.predict(image_input)
+        for i_batch in range(length):
+            image_name = names[i + i_batch]
+            encoding[image_name] = preds[i_batch]
+    filename = 'data/encoded_{}_images.p'.format(usage)
+    with open(filename, 'wb') as encoded_pickle:
+        pickle.dump(encoding, encoded_pickle)
 
 
 def build_train_vocab():
@@ -110,6 +143,15 @@ if __name__ == '__main__':
 
     if not os.path.isfile('data/vocab_train.p'):
         build_train_vocab()
+
+    if not os.path.isfile('data/encoded_train_images.p'):
+        encode_images('train')
+    if not os.path.isfile('data/encoded_valid_images.p'):
+        encode_images('valid')
+    if not os.path.isfile('data/encoded_test_a_images.p'):
+        encode_images('test_a')
+    if not os.path.isfile('data/encoded_test_b_images.p'):
+        encode_images('test_b')
 
     if not os.path.isfile('data/samples_train.p'):
         build_samples('train')
