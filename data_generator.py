@@ -6,7 +6,6 @@ import cv2 as cv
 import keras
 import numpy as np
 from keras.applications.vgg16 import VGG16, preprocess_input
-from keras.models import Model
 from keras.preprocessing import sequence
 from keras.utils import Sequence
 
@@ -17,11 +16,8 @@ class DataGenSequence(Sequence):
     def __init__(self, usage):
         self.usage = usage
 
-        image_encoder = VGG16(input_shape=(img_size, img_size, 3), include_top=False, weights='imagenet',
-                              pooling=None)
-        image_input = image_encoder.layers[0].input
-        x = image_encoder.layers[-2].output
-        self.image_model = Model(inputs=image_input, outputs=x)
+        self.image_model = VGG16(input_shape=(img_size, img_size, 3), include_top=False, weights='imagenet',
+                                 pooling=None)
 
         vocab = pickle.load(open('data/vocab_train.p', 'rb'))
         self.idx2word = sorted(vocab)

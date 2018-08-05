@@ -17,8 +17,8 @@ def generate_alphas(contexts, text_embedding):
     concat_input = Concatenate(axis=-1)([contexts, text_embedding])
 
     # feed into MLP
-    x = Dense(64, activation='relu')(concat_input)
-    x = Dense(512, activation='relu')(x)
+    x = Dense(256, activation='relu')(concat_input)
+    x = Dense(1024, activation='relu')(x)
     x = Dense(L, activation='softmax', name='alpha_output')(x)
     return x
 
@@ -31,7 +31,7 @@ def build_model():
     text_embedding = TimeDistributed(Dense(embedding_size))(x)
 
     # image embedding
-    image_input = Input(shape=(14, 14, 512))
+    image_input = Input(shape=(7, 7, 512))
     x = image_input
     contexts = Reshape([L, D])(x)
 
