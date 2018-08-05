@@ -1,12 +1,10 @@
 # encoding=utf-8
-import os
 import pickle
 
 import keras
 import numpy as np
 import tensorflow as tf
-from keras.applications.vgg16 import VGG16, preprocess_input
-from keras.preprocessing import image
+from keras.applications.vgg16 import VGG16
 from keras.preprocessing import sequence
 from keras.utils import Sequence
 
@@ -24,6 +22,9 @@ class DataGenSequence(Sequence):
         vocab = pickle.load(open('data/vocab_train.p', 'rb'))
         self.idx2word = sorted(vocab)
         self.word2idx = dict(zip(self.idx2word, range(len(vocab))))
+
+        filename = 'data/encoded_{}_images.p'.format(usage)
+        self.image_encoding = pickle.load(open(filename, 'rb'))
 
         if usage == 'train':
             samples_path = 'data/samples_train.p'
@@ -45,25 +46,21 @@ class DataGenSequence(Sequence):
         i = idx * batch_size
 
         length = min(batch_size, (len(self.samples) - i))
-        batch_image_input = np.empty((length, img_size, img_size, 3), dtype=np.float32)
+        batch_image_input = np.empty((length, 7, 7, 512), dtype=np.float32)
         batch_target = np.empty((length, vocab_size), dtype=np.int32)
         text_input = []
 
         for i_batch in range(length):
             sample = self.samples[i + i_batch]
             image_id = sample['image_id']
-            filename = os.path.join(self.image_folder, image_id)
-            img = image.load_img(filename, target_size=(img_size, img_size))
-            img = image.img_to_array(img)
-            batch_image_input[i_batch] = img
+            image_input = np.array(self.image_encoding[image_id])
+            batch_image_input[i_batch] = image_input
 
             text_input.append(sample['input'])
             batch_target[i_batch] = keras.utils.to_categorical(sample['output'], vocab_size)
 
         batch_text_input = sequence.pad_sequences(text_input, maxlen=max_token_length, padding='post')
-        batch_image_input = preprocess_input(batch_image_input)
-        batch_image_feature = self.image_model.predict(batch_image_input)
-        return [batch_image_feature, batch_text_input], batch_target
+        return [batch_image_input, batch_text_input], batch_target
 
     def on_epoch_end(self):
         np.random.shuffle(self.samples)
