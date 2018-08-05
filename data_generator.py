@@ -60,9 +60,6 @@ class DataGenSequence(Sequence):
             image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
             batch_image_input[i_batch] = image
 
-            image_input = np.array(self.image_encoding[image_id])
-            batch_image_input[i_batch] = image_input
-
             text_input.append(sample['input'])
             batch_target[i_batch] = keras.utils.to_categorical(sample['output'], vocab_size)
 
