@@ -4,20 +4,24 @@ import pickle
 import zipfile
 
 import jieba
-import keras
 import numpy as np
-from keras.applications.resnet50 import ResNet50
+from keras.applications.vgg16 import VGG16, preprocess_input
+from keras.models import Model
 from keras.preprocessing.image import (load_img, img_to_array)
 from tqdm import tqdm
 
-from config import img_rows, img_cols
+from config import img_rows, img_cols, channel
 from config import start_word, stop_word, unknown_word
 from config import train_annotations_filename
 from config import train_folder, valid_folder, test_a_folder, test_b_folder
 from config import train_image_folder, valid_image_folder, test_a_image_folder, test_b_image_folder
 from config import valid_annotations_filename
 
-image_model = ResNet50(include_top=False, weights='imagenet', pooling='avg')
+image_encoder = VGG16(input_shape=(img_rows, img_cols, channel), include_top=False, weights='imagenet',
+                      pooling=None)
+image_input = image_encoder.layers[0].input
+x = image_encoder.layers[-2].output
+image_model = Model(inputs=image_input, outputs=x)
 
 
 def ensure_folder(folder):
@@ -58,7 +62,7 @@ def encode_images(usage):
             filename = os.path.join(image_folder, image_name)
             img = load_img(filename, target_size=(img_rows, img_cols))
             img_array = img_to_array(img)
-            img_array = keras.applications.resnet50.preprocess_input(img_array)
+            img_array = preprocess_input(img_array)
             image_input[i_batch] = img_array
 
         preds = image_model.predict(image_input)

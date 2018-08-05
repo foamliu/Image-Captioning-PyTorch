@@ -12,6 +12,7 @@ vocab_size = 17628
 max_token_length = 40
 num_image_features = 2048
 hidden_size = 512
+L = 196
 
 train_folder = 'data/ai_challenger_caption_train_20170902'
 valid_folder = 'data/ai_challenger_caption_validation_20170910'
