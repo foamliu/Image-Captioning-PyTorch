@@ -4,6 +4,7 @@ import pickle
 
 import keras
 import numpy as np
+import tensorflow as tf
 from keras.applications.vgg16 import VGG16, preprocess_input
 from keras.preprocessing import image
 from keras.preprocessing import sequence
@@ -16,8 +17,9 @@ class DataGenSequence(Sequence):
     def __init__(self, usage):
         self.usage = usage
 
-        self.image_model = VGG16(input_shape=(img_size, img_size, 3), include_top=False, weights='imagenet',
-                                 pooling=None)
+        with tf.device("/cpu:0"):
+            self.image_model = VGG16(input_shape=(img_size, img_size, 3), include_top=False, weights='imagenet',
+                                     pooling=None)
 
         vocab = pickle.load(open('data/vocab_train.p', 'rb'))
         self.idx2word = sorted(vocab)
