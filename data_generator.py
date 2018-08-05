@@ -2,10 +2,10 @@
 import os
 import pickle
 
-import cv2 as cv
 import keras
 import numpy as np
 from keras.applications.vgg16 import VGG16, preprocess_input
+from keras.preprocessing import image
 from keras.preprocessing import sequence
 from keras.utils import Sequence
 
@@ -51,18 +51,17 @@ class DataGenSequence(Sequence):
             sample = self.samples[i + i_batch]
             image_id = sample['image_id']
             filename = os.path.join(self.image_folder, image_id)
-            image = cv.imread(filename)
-            image = cv.resize(image, (img_size, img_size), cv.INTER_CUBIC)
-            image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
-            batch_image_input[i_batch] = image
+            img = image.load_img(filename, target_size=(img_size, img_size))
+            img = image.img_to_array(img)
+            batch_image_input[i_batch] = img
 
             text_input.append(sample['input'])
             batch_target[i_batch] = keras.utils.to_categorical(sample['output'], vocab_size)
 
         batch_text_input = sequence.pad_sequences(text_input, maxlen=max_token_length, padding='post')
         batch_image_input = preprocess_input(batch_image_input)
-        batch_image_input = self.image_model.predict(batch_image_input)
-        return [batch_image_input, batch_text_input], batch_target
+        batch_image_feature = self.image_model.predict(batch_image_input)
+        return [batch_image_feature, batch_text_input], batch_target
 
     def on_epoch_end(self):
         np.random.shuffle(self.samples)
