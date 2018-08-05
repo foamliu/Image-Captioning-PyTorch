@@ -11,9 +11,9 @@ from config import max_token_length, vocab_size, embedding_size, hidden_size, L,
 def generate_alphas(contexts, text_embedding):
     # tile and concatenate inputs
     contexts = Reshape([L * D])(contexts)
-    print(K.int_shape(contexts))
+    # print(K.int_shape(contexts))
     text_embedding = Reshape([max_token_length * embedding_size])(text_embedding)
-    print(K.int_shape(text_embedding))
+    # print(K.int_shape(text_embedding))
     concat_input = Concatenate(axis=-1)([contexts, text_embedding])
 
     # feed into MLP
@@ -40,9 +40,9 @@ def build_model():
     alphas = RepeatVector(1)(alphas)
     alphas = Permute((2, 1))(alphas)
     x = multiply([contexts, alphas])
-    print(K.int_shape(x))
+    # print(K.int_shape(x))
     x = Lambda(lambda x: K.sum(x, axis=1), output_shape=lambda s: (s[0], s[2]), name='image_embedding')(x)
-    print(K.int_shape(x))
+    # print(K.int_shape(x))
 
     # # the image I is only input once
     image_embedding = RepeatVector(1)(x)
