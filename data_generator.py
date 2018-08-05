@@ -3,21 +3,15 @@ import pickle
 
 import keras
 import numpy as np
-import tensorflow as tf
-from keras.applications.vgg16 import VGG16
 from keras.preprocessing import sequence
 from keras.utils import Sequence
 
-from config import batch_size, max_token_length, vocab_size, train_image_folder, valid_image_folder, img_size, L
+from config import batch_size, max_token_length, vocab_size, train_image_folder, valid_image_folder, L
 
 
 class DataGenSequence(Sequence):
     def __init__(self, usage):
         self.usage = usage
-
-        with tf.device("/cpu:0"):
-            self.image_model = VGG16(input_shape=(img_size, img_size, 3), include_top=False, weights='imagenet',
-                                     pooling=None)
 
         vocab = pickle.load(open('data/vocab_train.p', 'rb'))
         self.idx2word = sorted(vocab)
