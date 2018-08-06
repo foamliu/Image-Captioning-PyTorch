@@ -38,23 +38,35 @@ if __name__ == '__main__':
         image_input[0] = encoded_test_a[image_name]
 
         start_words = [start_word]
+        alpha_list = []
         while True:
             text_input = [word2idx[i] for i in start_words]
             text_input = sequence.pad_sequences([text_input], maxlen=max_token_length, padding='post')
             preds = model.predict([image_input, text_input])
-            # print('output.shape: ' + str(output.shape))
-            word_pred = idx2word[np.argmax(preds[0])]
+            caption = preds[0]  # [1, vocab_size]
+            print('caption.shape: ' + str(caption.shape))
+            alpha = preds[1]  # [1, L]
+            print('alpha.shape: ' + str(alpha.shape))
+            alpha = np.reshape(alpha, (7, 7))
+            alpha_list.append(alpha_list)
+            word_pred = idx2word[int(np.argmax(caption[0]))]
             start_words.append(word_pred)
             if word_pred == stop_word or len(start_word) > max_token_length:
                 break
 
+        original = cv.imread(filename)
+        original = cv.resize(original, (img_rows, img_cols), cv.INTER_CUBIC)
+        cv.imwrite('images/{}_image.png'.format(i), original)
+
         sentence = ' '.join(start_words[1:-1])
         print(sentence)
 
-        img = cv.imread(filename)
-        img = cv.resize(img, (img_rows, img_cols), cv.INTER_CUBIC)
-        if not os.path.exists('images'):
-            os.makedirs('images')
-        cv.imwrite('images/{}_image.png'.format(i), img)
+        for j, alpha in enumerate(alpha_list):
+            alpha = alpha / np.max(alpha)
+            alpha_image = (alpha * 255.).astype(np.uint8)
+            alpha_image = cv.resize(alpha_image, (img_rows, img_cols), cv.INTER_CUBIC)
+            kernel = np.ones((5, 5), np.float32) / 25
+            image = cv.filter2D(alpha_image, -1, kernel)
+            cv.imwrite('alpha_{}_{}.png'.format(i, j), alpha_image)
 
     K.clear_session()
