@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
     names = [f for f in encoded_test_a.keys()]
 
-    samples = random.sample(names, 20)
+    samples = random.sample(names, 1)
 
     for i in range(len(samples)):
         image_name = samples[i]
