@@ -48,7 +48,7 @@ if __name__ == '__main__':
             alpha = preds[1]  # [1, L]
             # print('alpha.shape: ' + str(alpha.shape))
             alpha = np.reshape(alpha, (7, 7))
-            alpha_list.append(alpha_list)
+            alpha_list.append(alpha)
             word_pred = idx2word[int(np.argmax(caption[0]))]
             start_words.append(word_pred)
             if word_pred == stop_word or len(start_word) > max_token_length:
