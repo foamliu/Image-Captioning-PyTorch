@@ -67,6 +67,6 @@ if __name__ == '__main__':
             alpha_image = cv.resize(alpha_image, (img_rows, img_cols), cv.INTER_CUBIC)
             kernel = np.ones((5, 5), np.float32) / 25
             image = cv.filter2D(alpha_image, -1, kernel)
-            cv.imwrite('alpha_{}_{}.png'.format(i, j), alpha_image)
+            cv.imwrite('images/alpha_{}_{}.png'.format(i, j), alpha_image)
 
     K.clear_session()
