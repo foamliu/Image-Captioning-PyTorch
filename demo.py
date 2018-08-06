@@ -44,9 +44,9 @@ if __name__ == '__main__':
             text_input = sequence.pad_sequences([text_input], maxlen=max_token_length, padding='post')
             preds = model.predict([image_input, text_input])
             caption = preds[0]  # [1, vocab_size]
-            print('caption.shape: ' + str(caption.shape))
+            # print('caption.shape: ' + str(caption.shape))
             alpha = preds[1]  # [1, L]
-            print('alpha.shape: ' + str(alpha.shape))
+            # print('alpha.shape: ' + str(alpha.shape))
             alpha = np.reshape(alpha, (7, 7))
             alpha_list.append(alpha_list)
             word_pred = idx2word[int(np.argmax(caption[0]))]
