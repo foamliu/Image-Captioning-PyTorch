@@ -2,7 +2,7 @@ import os
 
 image_h = image_w = image_size = 256
 channel = 3
-batch_size = 256
+batch_size = 32
 epochs = 10000
 patience = 10
 num_train_samples = 14883151
@@ -22,6 +22,8 @@ dr_ratio = 0.5
 dr = False
 sgate = False
 attlstm = True
+cnn_train = False
+finetune_start_layer = 6
 
 train_folder = 'data/ai_challenger_caption_train_20170902'
 valid_folder = 'data/ai_challenger_caption_validation_20170910'

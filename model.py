@@ -12,7 +12,7 @@ from keras.models import Model
 from keras.utils import plot_model
 
 from config import image_h, image_w, cnn_type, dr, dr_ratio, vocab_size, max_token_length, emb_dim, z_dim, sgate, \
-    lstm_dim, attlstm
+    lstm_dim, attlstm, batch_size, cnn_train, finetune_start_layer
 
 
 def image_model(input_tensor):
@@ -167,25 +167,25 @@ def language_model(wh, dim, convfeats, prev_words):
     return model
 
 
-def build_model(args_dict):
+def build_model():
     # for testing stage where caption is predicted word by word
     seqlen = max_token_length
 
     # get pretrained convnet
-    in_im = Input(batch_shape=(args_dict.bs, args_dict.imsize, args_dict.imsize, 3), name='image')
+    in_im = Input(batch_shape=(batch_size, image_h, image_w, 3), name='image')
     convnet = image_model(in_im)
 
     wh = convnet.output_shape[1]  # size of conv5
     dim = convnet.output_shape[3]  # number of channels
 
-    if not args_dict.cnn_train:
+    if not cnn_train:
         for i, layer in enumerate(convnet.layers):
-            if i > args_dict.finetune_start_layer:
+            if i > finetune_start_layer:
                 layer.trainable = False
 
     imfeats = convnet(in_im)
-    convfeats = Input(batch_shape=(args_dict.bs, wh, wh, dim))
-    prev_words = Input(batch_shape=(args_dict.bs, seqlen), name='prev_words')
+    convfeats = Input(batch_shape=(batch_size, wh, wh, dim))
+    prev_words = Input(batch_shape=(batch_size, seqlen), name='prev_words')
     lang_model = language_model(wh, dim, convfeats, prev_words)
 
     out = lang_model([imfeats, prev_words])
