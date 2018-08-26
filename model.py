@@ -39,9 +39,6 @@ def image_model(input_tensor):
 
 
 def language_model(wh, dim, convfeats, prev_words):
-    # for testing stage where caption is predicted word by word
-    seqlen = max_token_length
-
     # imfeats need to be "flattened" eg 15x15x512 --> 225x512
     V = Reshape((wh * wh, dim), name='conv_feats')(convfeats)  # 225x512
 
@@ -64,10 +61,10 @@ def language_model(wh, dim, convfeats, prev_words):
                     activation='relu', name='Vi_emb')(Vi)
 
     # repeat average feat as many times as seqlen to infer output size
-    x = RepeatVector(seqlen)(Vg)  # seqlen,512
+    x = RepeatVector(max_token_length)(Vg)  # seqlen,512
 
     # embedding for previous words
-    wemb = Embedding(vocab_size, emb_dim, input_length=seqlen)
+    wemb = Embedding(vocab_size, emb_dim, input_length=max_token_length)
     emb = wemb(prev_words)
     emb = Activation('relu')(emb)
     if dr:
@@ -107,8 +104,8 @@ def language_model(wh, dim, convfeats, prev_words):
 
         # repeat all image vectors as many times as timesteps (seqlen)
         # linear feats are used to apply attention, embedded feats are used to compute attention
-        z_v_linear = TimeDistributed(RepeatVector(seqlen), name='z_v_linear')(Vi)
-        z_v_embed = TimeDistributed(RepeatVector(seqlen), name='z_v_embed')(Vi_emb)
+        z_v_linear = TimeDistributed(RepeatVector(max_token_length), name='z_v_linear')(Vi)
+        z_v_embed = TimeDistributed(RepeatVector(max_token_length), name='z_v_embed')(Vi_emb)
 
         z_v_linear = Permute((2, 1, 3))(z_v_linear)
         z_v_embed = Permute((2, 1, 3))(z_v_embed)
@@ -123,8 +120,8 @@ def language_model(wh, dim, convfeats, prev_words):
 
             fake_feat_embed = Conv1D(emb_dim, 1, name='zs_embed', border_mode='same')(fake_feat)
             # reshape for merging with visual feats
-            z_s_linear = Reshape((seqlen, 1, z_dim))(fake_feat)
-            z_s_embed = Reshape((seqlen, 1, emb_dim))(fake_feat_embed)
+            z_s_linear = Reshape((max_token_length, 1, z_dim))(fake_feat)
+            z_s_embed = Reshape((max_token_length, 1, emb_dim))(fake_feat_embed)
 
             # concat fake feature to the rest of image features
             z_v_linear = Concatenate(axis=-2)([z_v_linear, z_s_linear])
@@ -138,7 +135,7 @@ def language_model(wh, dim, convfeats, prev_words):
         # compute attention values
         att = TimeDistributed(Conv1D(1, 1, border_mode='same'), name='att')(z)
 
-        att = Reshape((seqlen, num_vfeats), name='att_res')(att)
+        att = Reshape((max_token_length, num_vfeats), name='att_res')(att)
         # softmax activation
         att = TimeDistributed(Activation('softmax'), name='att_scores')(att)
         att = TimeDistributed(RepeatVector(z_dim), name='att_rep')(att)
@@ -161,9 +158,6 @@ def language_model(wh, dim, convfeats, prev_words):
 
 
 def build_model():
-    # for testing stage where caption is predicted word by word
-    seqlen = max_token_length
-
     # get pretrained convnet
     in_im = Input(batch_shape=(None, image_h, image_w, 3), name='image')
     convnet = image_model(in_im)
@@ -178,7 +172,7 @@ def build_model():
 
     imfeats = convnet(in_im)
     convfeats = Input(batch_shape=(None, wh, wh, dim))
-    prev_words = Input(batch_shape=(None, seqlen), name='prev_words')
+    prev_words = Input(batch_shape=(None, max_token_length), name='prev_words')
     lang_model = language_model(wh, dim, convfeats, prev_words)
 
     out = lang_model([imfeats, prev_words])
