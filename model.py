@@ -158,7 +158,7 @@ def language_model(wh, dim, convfeats, prev_words):
 
     predictions = TimeDistributed(Dense(num_classes, activation='softmax'), name='out')(h)
 
-    model = Model(input=[convfeats, prev_words], output=predictions)
+    model = Model(inputs=[convfeats, prev_words], outputs=predictions)
     return model
 
 
