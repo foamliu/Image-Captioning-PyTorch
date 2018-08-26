@@ -127,8 +127,8 @@ def build_model():
                 layer.trainable = False
 
     imfeats = convnet(in_im)
-    convfeats = Input(batch_shape=(batch_size, wh, wh, dim))
-    prev_words = Input(batch_shape=(batch_size, max_token_length), name='prev_words')
+    convfeats = Input(batch_shape=(batch_size // 4, wh, wh, dim))
+    prev_words = Input(batch_shape=(batch_size // 4, max_token_length), name='prev_words')
     lang_model = language_model(wh, dim, convfeats, prev_words)
 
     out = lang_model([imfeats, prev_words])
