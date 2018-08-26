@@ -3,12 +3,11 @@ import argparse
 import keras
 import tensorflow as tf
 from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
-from keras.utils import multi_gpu_model
 
-from config import patience, epochs, num_train_samples, num_valid_samples, batch_size
+from config import patience, epochs, num_train_samples, num_valid_samples, batch_size, max_token_length
 from data_generator import train_gen, valid_gen
 from model import build_model
-from utils import get_available_gpus, get_available_cpus, ensure_folder
+from utils import get_available_cpus, ensure_folder
 
 if __name__ == '__main__':
     # Parse arguments
@@ -42,7 +41,9 @@ if __name__ == '__main__':
     if pretrained_path is not None:
         new_model.load_weights(pretrained_path)
 
-    new_model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    decoder_target = tf.placeholder(dtype='int32', shape=(None, max_token_length))
+    new_model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'],
+                      target_tensors=decoder_target)
 
     print(new_model.summary())
 
