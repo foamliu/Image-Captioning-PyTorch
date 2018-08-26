@@ -1,4 +1,3 @@
-import tensorflow as tf
 from keras import backend as K
 from keras.layers import Concatenate, Add, Multiply
 from keras.layers import Input, Conv1D, CuDNNLSTM
@@ -42,7 +41,6 @@ def image_model(input_tensor):
 def language_model(wh, dim, convfeats, prev_words):
     # for testing stage where caption is predicted word by word
     seqlen = max_token_length
-    num_classes = vocab_size
 
     # imfeats need to be "flattened" eg 15x15x512 --> 225x512
     V = Reshape((wh * wh, dim), name='conv_feats')(convfeats)  # 225x512
@@ -69,7 +67,7 @@ def language_model(wh, dim, convfeats, prev_words):
     x = RepeatVector(seqlen)(Vg)  # seqlen,512
 
     # embedding for previous words
-    wemb = Embedding(num_classes, emb_dim, input_length=seqlen)
+    wemb = Embedding(vocab_size, emb_dim, input_length=seqlen)
     emb = wemb(prev_words)
     emb = Activation('relu')(emb)
     if dr:
@@ -156,7 +154,7 @@ def language_model(wh, dim, convfeats, prev_words):
         if dr:
             h = Dropout(dr_ratio, name='mlp_in_tanh_dp')(h)
 
-    predictions = TimeDistributed(Dense(num_classes, activation='softmax'), name='out')(h)
+    predictions = Dense(vocab_size, activation='softmax', name='output')(h)
 
     model = Model(inputs=[convfeats, prev_words], outputs=predictions)
     return model
