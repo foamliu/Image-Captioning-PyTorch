@@ -83,18 +83,14 @@ def language_model(wh, dim, convfeats, prev_words):
         # lstm with two outputs
         lstm_ = CuDNNLSTM(output_dim=lstm_dim,
                           return_sequences=True, stateful=True,
-                          dropout_W=dr_ratio,
-                          dropout_U=dr_ratio,
-                          sentinel=True, name='hs')
+                          name='hs')
         h, s = lstm_(x)
 
     else:
         # regular lstm
         lstm_ = CuDNNLSTM(lstm_dim,
                           return_sequences=True, stateful=True,
-                          dropout_W=dr_ratio,
-                          dropout_U=dr_ratio,
-                          sentinel=False, name='h')
+                          name='h')
         h = lstm_(x)
 
     num_vfeats = wh * wh
