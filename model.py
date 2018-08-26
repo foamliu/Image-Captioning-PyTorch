@@ -80,8 +80,8 @@ def language_model(wh, dim, convfeats, prev_words):
 
         # repeat all image vectors as many times as timesteps (seqlen)
         # linear feats are used to apply attention, embedded feats are used to compute attention
-        z_v_linear = TimeDistributed(RepeatVector(max_token_length), name='z_v_linear')(Vi)
-        z_v_embed = TimeDistributed(RepeatVector(max_token_length), name='z_v_embed')(Vi_emb)
+        z_v_linear = TimeDistributed(RepeatVector(1), name='z_v_linear')(Vi)
+        z_v_embed = TimeDistributed(RepeatVector(1), name='z_v_embed')(Vi_emb)
 
         z_v_linear = Permute((2, 1, 3))(z_v_linear)
         z_v_embed = Permute((2, 1, 3))(z_v_embed)
@@ -92,7 +92,7 @@ def language_model(wh, dim, convfeats, prev_words):
         # compute attention values
         att = TimeDistributed(Conv1D(1, 1, padding='same'), name='att')(z)
 
-        att = Reshape((max_token_length, num_vfeats), name='att_res')(att)
+        att = Reshape((1, num_vfeats), name='att_res')(att)
         # softmax activation
         att = TimeDistributed(Activation('softmax'), name='att_scores')(att)
         att = TimeDistributed(RepeatVector(z_dim), name='att_rep')(att)
