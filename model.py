@@ -191,8 +191,7 @@ def build_model():
 
 
 if __name__ == '__main__':
-    with tf.device("/cpu:0"):
-        model = build_model()
+    model = build_model()
     print(model.summary())
     plot_model(model, to_file='model.svg', show_layer_names=True, show_shapes=True)
 
