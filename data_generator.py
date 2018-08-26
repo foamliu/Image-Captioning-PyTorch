@@ -45,8 +45,8 @@ class DataGenSequence(Sequence):
         i = idx * batch_size
 
         batch_image_input = np.empty((batch_size, image_h, image_w, 3), dtype=np.float32)
-        caption_target = np.empty((batch_size, vocab_size), dtype=np.int32)
         text_input = []
+        text_output = []
 
         for i_batch in range(batch_size):
             sample = self.samples[i + i_batch]
@@ -58,10 +58,10 @@ class DataGenSequence(Sequence):
             batch_image_input[i_batch] = img_array
 
             text_input.append(sample['input'])
-            caption_target[i_batch] = sample['output']
+            text_output.append(sample['output'])
 
         batch_text_input = sequence.pad_sequences(text_input, maxlen=max_token_length, padding='post')
-        batch_text_output = sequence.pad_sequences(caption_target, maxlen=max_token_length, padding='post')
+        batch_text_output = sequence.pad_sequences(text_output, maxlen=max_token_length, padding='post')
         return [batch_image_input, batch_text_input], batch_text_output
 
     def on_epoch_end(self):
