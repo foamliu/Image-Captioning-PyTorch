@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
     decoder_target = tf.placeholder(dtype='int32', shape=(None, max_token_length))
     new_model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'],
-                      target_tensors=decoder_target)
+                      target_tensors=[decoder_target])
 
     print(new_model.summary())
 
