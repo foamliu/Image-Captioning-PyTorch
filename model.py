@@ -11,7 +11,7 @@ from keras.utils import plot_model
 
 from config import image_h, image_w, cnn_type, vocab_size, max_token_length, emb_dim, z_dim, lstm_dim, \
     attlstm, cnn_train, finetune_start_layer, batch_size
-from stateful_multi_gpu import stateful_multi_gpu
+
 
 def image_model(input_tensor):
     '''
@@ -134,9 +134,8 @@ def build_model():
     out = lang_model([imfeats, prev_words])
 
     model = Model(inputs=[in_im, prev_words], outputs=out)
-    parallel_model = stateful_multi_gpu(prev_words, model, batch_size, 4)
 
-    return parallel_model
+    return model
 
 
 if __name__ == '__main__':

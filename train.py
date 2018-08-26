@@ -38,20 +38,9 @@ if __name__ == '__main__':
 
 
     # Load our model, added support for Multi-GPUs
-    num_gpu = len(get_available_gpus())
-    if num_gpu >= 2:
-        with tf.device("/cpu:0"):
-            model = build_model()
-            if pretrained_path is not None:
-                model.load_weights(pretrained_path)
-
-        new_model = multi_gpu_model(model, gpus=num_gpu)
-        # rewrite the callback: saving through the original model and not the multi-gpu model.
-        model_checkpoint = MyCbk(model)
-    else:
-        new_model = build_model()
-        if pretrained_path is not None:
-            new_model.load_weights(pretrained_path)
+    new_model = build_model()
+    if pretrained_path is not None:
+        new_model.load_weights(pretrained_path)
 
     new_model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
