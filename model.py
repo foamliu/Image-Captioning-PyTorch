@@ -11,7 +11,7 @@ from keras.utils import plot_model
 
 from config import image_h, image_w, cnn_type, vocab_size, max_token_length, emb_dim, z_dim, lstm_dim, \
     attlstm, cnn_train, finetune_start_layer, batch_size
-
+from stateful_multi_gpu import stateful_multi_gpu
 
 def image_model(input_tensor):
     '''
@@ -115,7 +115,7 @@ def language_model(wh, dim, convfeats, prev_words):
 
 def build_model():
     # get pretrained convnet
-    in_im = Input(batch_shape=(None, image_h, image_w, 3), name='image')
+    in_im = Input(batch_shape=(batch_size, image_h, image_w, 3), name='image')
     convnet = image_model(in_im)
 
     wh = convnet.output_shape[1]  # size of conv5
@@ -127,15 +127,16 @@ def build_model():
                 layer.trainable = False
 
     imfeats = convnet(in_im)
-    convfeats = Input(batch_shape=(None, wh, wh, dim))
-    prev_words = Input(batch_shape=(None, max_token_length), name='prev_words')
+    convfeats = Input(batch_shape=(batch_size, wh, wh, dim))
+    prev_words = Input(batch_shape=(batch_size, max_token_length), name='prev_words')
     lang_model = language_model(wh, dim, convfeats, prev_words)
 
     out = lang_model([imfeats, prev_words])
 
     model = Model(inputs=[in_im, prev_words], outputs=out)
+    parallel_model = stateful_multi_gpu([in_im, prev_words], model, batch_size, 4)
 
-    return model
+    return parallel_model
 
 
 if __name__ == '__main__':
