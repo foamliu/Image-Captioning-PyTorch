@@ -65,7 +65,7 @@ def language_model(wh, dim, convfeats, prev_words):
     x = Concatenate(name='lstm_in')([x, emb])
 
     # regular lstm
-    lstm_ = CuDNNLSTM(lstm_dim, return_sequences=False, stateful=True, name='h')
+    lstm_ = CuDNNLSTM(lstm_dim, return_sequences=True, stateful=True, name='h')
     h = lstm_(x)
 
     num_vfeats = wh * wh
