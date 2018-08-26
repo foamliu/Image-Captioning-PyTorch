@@ -7,7 +7,7 @@ import numpy as np
 from keras.preprocessing import sequence
 from keras.preprocessing.image import (load_img, img_to_array)
 from keras.utils import Sequence
-
+from keras.utils import to_categorical
 from config import image_h, image_w, batch_size, max_token_length, vocab_size, train_image_folder, valid_image_folder, \
     cnn_type
 
@@ -45,8 +45,8 @@ class DataGenSequence(Sequence):
         i = idx * batch_size
 
         batch_image_input = np.empty((batch_size, image_h, image_w, 3), dtype=np.float32)
+        batch_text_output = np.zeros((batch_size, max_token_length, vocab_size), dtype=np.int32)
         text_input = []
-        text_output = []
 
         for i_batch in range(batch_size):
             sample = self.samples[i + i_batch]
@@ -58,10 +58,10 @@ class DataGenSequence(Sequence):
             batch_image_input[i_batch] = img_array
 
             text_input.append(sample['input'])
-            text_output.append(sample['output'])
+            for j, idx in enumerate(sample['output']):
+                batch_text_output[i_batch, j] = to_categorical(idx, vocab_size)
 
         batch_text_input = sequence.pad_sequences(text_input, maxlen=max_token_length, padding='post')
-        batch_text_output = sequence.pad_sequences(text_output, maxlen=max_token_length, padding='post')
         return [batch_image_input, batch_text_input], batch_text_output
 
     def on_epoch_end(self):
