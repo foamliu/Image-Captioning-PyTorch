@@ -106,6 +106,7 @@ def language_model(wh, dim, convfeats, prev_words):
         atten_out = Add(name='mlp_in')([h_out_linear, c_vec])
         h = TimeDistributed(Dense(emb_dim, activation='tanh'))(atten_out)
 
+    h = Lambda(lambda x: x[:, -1, :])(h)
     predictions = Dense(vocab_size, activation='softmax', name='output')(h)
 
     model = Model(inputs=[convfeats, prev_words], outputs=predictions)
@@ -139,6 +140,7 @@ def build_model():
 
 if __name__ == '__main__':
     import tensorflow as tf
+
     with tf.device('/cpu:0'):
         model = build_model()
     print(model.summary())
