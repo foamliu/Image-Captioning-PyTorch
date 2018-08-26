@@ -134,7 +134,7 @@ def build_model():
     out = lang_model([imfeats, prev_words])
 
     model = Model(inputs=[in_im, prev_words], outputs=out)
-    parallel_model = stateful_multi_gpu([in_im, prev_words], model, batch_size, 4)
+    parallel_model = stateful_multi_gpu(prev_words, model, batch_size, 4)
 
     return parallel_model
 
