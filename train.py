@@ -53,8 +53,7 @@ if __name__ == '__main__':
         if pretrained_path is not None:
             new_model.load_weights(pretrained_path)
 
-    new_model.compile(optimizer='RMSprop', loss='categorical_crossentropy', metrics=['accuracy'],
-                      loss_weights=[1.0, 0.0])
+    new_model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
     print(new_model.summary())
 
