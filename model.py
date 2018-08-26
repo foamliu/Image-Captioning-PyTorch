@@ -2,7 +2,6 @@ import tensorflow as tf
 from keras import backend as K
 from keras.layers import Concatenate, Add, Multiply
 from keras.layers import Input, Conv1D, CuDNNLSTM
-from keras.layers.convolutional import Convolution1D
 from keras.layers.core import Dense, Activation, Permute, Lambda
 from keras.layers.core import RepeatVector, Dropout, Reshape
 from keras.layers.embeddings import Embedding
@@ -63,8 +62,8 @@ def language_model(wh, dim, convfeats, prev_words):
     if dr:
         Vi = Dropout(dr_ratio)(Vi)
     # embed
-    Vi_emb = Convolution1D(emb_dim, 1, border_mode='same',
-                           activation='relu', name='Vi_emb')(Vi)
+    Vi_emb = Conv1D(emb_dim, 1, border_mode='same',
+                    activation='relu', name='Vi_emb')(Vi)
 
     # repeat average feat as many times as seqlen to infer output size
     x = RepeatVector(seqlen)(Vg)  # seqlen,512
@@ -101,10 +100,10 @@ def language_model(wh, dim, convfeats, prev_words):
 
         # embed ht vectors.
         # linear used as input to final classifier, embedded ones are used to compute attention
-        h_out_linear = Convolution1D(z_dim, 1, activation='tanh', name='zh_linear', border_mode='same')(h)
+        h_out_linear = Conv1D(z_dim, 1, activation='tanh', name='zh_linear', border_mode='same')(h)
         if dr:
             h_out_linear = Dropout(dr_ratio)(h_out_linear)
-        h_out_embed = Convolution1D(emb_dim, 1, name='zh_embed', border_mode='same')(h_out_linear)
+        h_out_embed = Conv1D(emb_dim, 1, name='zh_embed', border_mode='same')(h_out_linear)
         # repeat all h vectors as many times as local feats in v
         z_h_embed = TimeDistributed(RepeatVector(num_vfeats))(h_out_embed)
 
@@ -120,11 +119,11 @@ def language_model(wh, dim, convfeats, prev_words):
 
             # embed sentinel vec
             # linear used as additional feat to apply attention, embedded used as add. feat to compute attention
-            fake_feat = Convolution1D(z_dim, 1, activation='relu', name='zs_linear', border_mode='same')(s)
+            fake_feat = Conv1D(z_dim, 1, activation='relu', name='zs_linear', border_mode='same')(s)
             if dr:
                 fake_feat = Dropout(dr_ratio)(fake_feat)
 
-            fake_feat_embed = Convolution1D(emb_dim, 1, name='zs_embed', border_mode='same')(fake_feat)
+            fake_feat_embed = Conv1D(emb_dim, 1, name='zs_embed', border_mode='same')(fake_feat)
             # reshape for merging with visual feats
             z_s_linear = Reshape((seqlen, 1, z_dim))(fake_feat)
             z_s_embed = Reshape((seqlen, 1, emb_dim))(fake_feat_embed)
@@ -139,7 +138,7 @@ def language_model(wh, dim, convfeats, prev_words):
             z = Dropout(dr_ratio)(z)
         z = TimeDistributed(Activation('tanh', name='merge_v_h_tanh'))(z)
         # compute attention values
-        att = TimeDistributed(Convolution1D(1, 1, border_mode='same'), name='att')(z)
+        att = TimeDistributed(Conv1D(1, 1, border_mode='same'), name='att')(z)
 
         att = Reshape((seqlen, num_vfeats), name='att_res')(att)
         # softmax activation
