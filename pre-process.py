@@ -9,7 +9,7 @@ from keras.applications.vgg16 import VGG16, preprocess_input
 from keras.preprocessing.image import (load_img, img_to_array)
 from tqdm import tqdm
 
-from config import img_rows, img_cols, channel
+from config import image_h, image_w, channel
 from config import start_word, stop_word, unknown_word
 from config import train_annotations_filename
 from config import train_folder, valid_folder, test_a_folder, test_b_folder
@@ -17,7 +17,7 @@ from config import train_image_folder, valid_image_folder, test_a_image_folder, 
 from config import valid_annotations_filename
 from utils import ensure_folder
 
-image_model = VGG16(input_shape=(img_rows, img_cols, channel), include_top=False, weights='imagenet',
+image_model = VGG16(input_shape=(image_h, image_w, channel), include_top=False, weights='imagenet',
                     pooling=None)
 
 
@@ -45,11 +45,11 @@ def encode_images(usage):
     for idx in tqdm(range(num_batches)):
         i = idx * batch_size
         length = min(batch_size, (len(names) - i))
-        image_input = np.empty((length, img_rows, img_cols, 3))
+        image_input = np.empty((length, image_h, image_w, 3))
         for i_batch in range(length):
             image_name = names[i + i_batch]
             filename = os.path.join(image_folder, image_name)
-            img = load_img(filename, target_size=(img_rows, img_cols))
+            img = load_img(filename, target_size=(image_h, image_w))
             img_array = img_to_array(img)
             img_array = preprocess_input(img_array)
             image_input[i_batch] = img_array
