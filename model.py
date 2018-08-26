@@ -2,15 +2,15 @@ from keras import backend as K
 from keras.layers import Concatenate, Add, Multiply
 from keras.layers import Input, Conv1D, CuDNNLSTM
 from keras.layers.core import Dense, Activation, Permute, Lambda
-from keras.layers.core import RepeatVector, Dropout, Reshape
+from keras.layers.core import RepeatVector, Reshape
 from keras.layers.embeddings import Embedding
 from keras.layers.pooling import GlobalAveragePooling1D
 from keras.layers.wrappers import TimeDistributed
 from keras.models import Model
 from keras.utils import plot_model
 
-from config import image_h, image_w, cnn_type, dr, dr_ratio, vocab_size, max_token_length, emb_dim, z_dim, sgate, \
-    lstm_dim, attlstm, cnn_train, finetune_start_layer, batch_size
+from config import image_h, image_w, cnn_type, vocab_size, max_token_length, emb_dim, z_dim, lstm_dim, \
+    attlstm, cnn_train, finetune_start_layer, batch_size
 
 
 def image_model(input_tensor):
@@ -46,19 +46,13 @@ def language_model(wh, dim, convfeats, prev_words):
     Vg = GlobalAveragePooling1D(name='Vg')(V)
     # embed average imfeats
     Vg = Dense(emb_dim, activation='relu', name='Vg_')(Vg)
-    if dr:
-        Vg = Dropout(dr_ratio)(Vg)
 
     # we keep spatial image feats to compute context vector later
     # project to z_space
-    Vi = Conv1D(z_dim, 1, border_mode='same',
-                activation='relu', name='Vi')(V)
+    Vi = Conv1D(z_dim, kernel_size=1, padding='same', activation='relu', name='Vi')(V)
 
-    if dr:
-        Vi = Dropout(dr_ratio)(Vi)
     # embed
-    Vi_emb = Conv1D(emb_dim, 1, border_mode='same',
-                    activation='relu', name='Vi_emb')(Vi)
+    Vi_emb = Conv1D(emb_dim, kernel_size=1, padding='same', activation='relu', name='Vi_emb')(Vi)
 
     # repeat average feat as many times as seqlen to infer output size
     x = RepeatVector(max_token_length)(Vg)  # seqlen,512
@@ -67,38 +61,20 @@ def language_model(wh, dim, convfeats, prev_words):
     wemb = Embedding(vocab_size, emb_dim, input_length=max_token_length)
     emb = wemb(prev_words)
     emb = Activation('relu')(emb)
-    if dr:
-        emb = Dropout(dr_ratio)(emb)
 
     x = Concatenate(name='lstm_in')([x, emb])
-    if dr:
-        x = Dropout(dr_ratio)(x)
-    if sgate:
-        # lstm with two outputs
-        lstm_ = CuDNNLSTM(output_dim=lstm_dim,
-                          return_sequences=True, stateful=True,
-                          name='hs')
-        h, s = lstm_(x)
 
-    else:
-        # regular lstm
-        lstm_ = CuDNNLSTM(lstm_dim,
-                          return_sequences=True, stateful=True,
-                          name='h')
-        h = lstm_(x)
+    # regular lstm
+    lstm_ = CuDNNLSTM(lstm_dim, return_sequences=False, stateful=True, name='h')
+    h = lstm_(x)
 
     num_vfeats = wh * wh
-    if sgate:
-        num_vfeats = num_vfeats + 1
 
     if attlstm:
-
         # embed ht vectors.
         # linear used as input to final classifier, embedded ones are used to compute attention
-        h_out_linear = Conv1D(z_dim, 1, activation='tanh', name='zh_linear', border_mode='same')(h)
-        if dr:
-            h_out_linear = Dropout(dr_ratio)(h_out_linear)
-        h_out_embed = Conv1D(emb_dim, 1, name='zh_embed', border_mode='same')(h_out_linear)
+        h_out_linear = Conv1D(z_dim, 1, activation='tanh', name='zh_linear', padding='same')(h)
+        h_out_embed = Conv1D(emb_dim, 1, name='zh_embed', padding='same')(h_out_linear)
         # repeat all h vectors as many times as local feats in v
         z_h_embed = TimeDistributed(RepeatVector(num_vfeats))(h_out_embed)
 
@@ -110,30 +86,11 @@ def language_model(wh, dim, convfeats, prev_words):
         z_v_linear = Permute((2, 1, 3))(z_v_linear)
         z_v_embed = Permute((2, 1, 3))(z_v_embed)
 
-        if sgate:
-
-            # embed sentinel vec
-            # linear used as additional feat to apply attention, embedded used as add. feat to compute attention
-            fake_feat = Conv1D(z_dim, 1, activation='relu', name='zs_linear', border_mode='same')(s)
-            if dr:
-                fake_feat = Dropout(dr_ratio)(fake_feat)
-
-            fake_feat_embed = Conv1D(emb_dim, 1, name='zs_embed', border_mode='same')(fake_feat)
-            # reshape for merging with visual feats
-            z_s_linear = Reshape((max_token_length, 1, z_dim))(fake_feat)
-            z_s_embed = Reshape((max_token_length, 1, emb_dim))(fake_feat_embed)
-
-            # concat fake feature to the rest of image features
-            z_v_linear = Concatenate(axis=-2)([z_v_linear, z_s_linear])
-            z_v_embed = Concatenate(axis=-2)([z_v_embed, z_s_embed])
-
         # sum outputs from z_v and z_h
         z = Add(name='merge_v_h')([z_h_embed, z_v_embed])
-        if dr:
-            z = Dropout(dr_ratio)(z)
         z = TimeDistributed(Activation('tanh', name='merge_v_h_tanh'))(z)
         # compute attention values
-        att = TimeDistributed(Conv1D(1, 1, border_mode='same'), name='att')(z)
+        att = TimeDistributed(Conv1D(1, 1, padding='same'), name='att')(z)
 
         att = Reshape((max_token_length, num_vfeats), name='att_res')(att)
         # softmax activation
@@ -148,8 +105,6 @@ def language_model(wh, dim, convfeats, prev_words):
         c_vec = TimeDistributed(sumpool, name='c_vec')(w_Vi)
         atten_out = Add(name='mlp_in')([h_out_linear, c_vec])
         h = TimeDistributed(Dense(emb_dim, activation='tanh'))(atten_out)
-        if dr:
-            h = Dropout(dr_ratio, name='mlp_in_tanh_dp')(h)
 
     predictions = Dense(vocab_size, activation='softmax', name='output')(h)
 
