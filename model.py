@@ -115,7 +115,7 @@ def language_model(wh, dim, convfeats, prev_words):
 
 def build_model():
     # get pretrained convnet
-    in_im = Input(batch_shape=(batch_size, image_h, image_w, 3), name='image')
+    in_im = Input(batch_shape=(batch_size // 4, image_h, image_w, 3), name='image')
     convnet = image_model(in_im)
 
     wh = convnet.output_shape[1]  # size of conv5
