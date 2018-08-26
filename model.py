@@ -31,7 +31,7 @@ def image_model(input_tensor):
                      input_tensor=input_tensor, input_shape=input_shape)
 
     if cnn_type == 'resnet':
-        model = Model(input=base_model.input, output=[base_model.layers[-2].output])
+        model = Model(inputs=base_model.input, outputs=[base_model.layers[-2].output])
     else:
         model = base_model
 
@@ -115,7 +115,7 @@ def language_model(wh, dim, convfeats, prev_words):
 
 def build_model():
     # get pretrained convnet
-    in_im = Input(batch_shape=(batch_size // 4, image_h, image_w, 3), name='image')
+    in_im = Input(batch_shape=(None, image_h, image_w, 3), name='image')
     convnet = image_model(in_im)
 
     wh = convnet.output_shape[1]  # size of conv5
@@ -127,8 +127,8 @@ def build_model():
                 layer.trainable = False
 
     imfeats = convnet(in_im)
-    convfeats = Input(batch_shape=(batch_size // 4, wh, wh, dim))
-    prev_words = Input(batch_shape=(batch_size // 4, max_token_length), name='prev_words')
+    convfeats = Input(batch_shape=(None, wh, wh, dim))
+    prev_words = Input(batch_shape=(None, max_token_length), name='prev_words')
     lang_model = language_model(wh, dim, convfeats, prev_words)
 
     out = lang_model([imfeats, prev_words])
