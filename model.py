@@ -80,8 +80,8 @@ def language_model(wh, dim, convfeats, prev_words):
 
         # repeat all image vectors as many times as timesteps (seqlen)
         # linear feats are used to apply attention, embedded feats are used to compute attention
-        z_v_linear = TimeDistributed(RepeatVector(1), name='z_v_linear')(Vi)
-        z_v_embed = TimeDistributed(RepeatVector(1), name='z_v_embed')(Vi_emb)
+        z_v_linear = TimeDistributed(RepeatVector(max_token_length), name='z_v_linear')(Vi)
+        z_v_embed = TimeDistributed(RepeatVector(max_token_length), name='z_v_embed')(Vi_emb)
 
         z_v_linear = Permute((2, 1, 3))(z_v_linear)
         z_v_embed = Permute((2, 1, 3))(z_v_embed)
