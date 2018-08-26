@@ -63,16 +63,16 @@ def build_samples(usage):
         caption = a['caption']
         for c in caption:
             seg_list = jieba.cut(c)
-            input = []
-            last_word = start_word
+            input = [word2idx[start_word]]
+            output = []
             for j, word in enumerate(seg_list):
                 if word not in vocab:
                     word = unknown_word
-                input.append(word2idx[last_word])
-                samples.append({'image_id': image_id, 'input': list(input), 'output': word2idx[word]})
-                last_word = word
-            input.append(word2idx[last_word])
-            samples.append({'image_id': image_id, 'input': list(input), 'output': word2idx[stop_word]})
+                input.append(word2idx[word])
+                output.append(word2idx[word])
+
+            output.append(word2idx[stop_word])
+            samples.append({'image_id': image_id, 'input': list(input), 'output': list(output)})
 
     filename = 'data/samples_{}.p'.format(usage)
     with open(filename, 'wb') as f:

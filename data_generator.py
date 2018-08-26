@@ -58,10 +58,11 @@ class DataGenSequence(Sequence):
             batch_image_input[i_batch] = img_array
 
             text_input.append(sample['input'])
-            caption_target[i_batch] = keras.utils.to_categorical(sample['output'], vocab_size)
+            caption_target[i_batch] = sample['output']
 
         batch_text_input = sequence.pad_sequences(text_input, maxlen=max_token_length, padding='post')
-        return [batch_image_input, batch_text_input], caption_target
+        batch_text_output = sequence.pad_sequences(caption_target, maxlen=max_token_length, padding='post')
+        return [batch_image_input, batch_text_input], batch_text_output
 
     def on_epoch_end(self):
         np.random.shuffle(self.samples)
