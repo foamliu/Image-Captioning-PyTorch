@@ -51,7 +51,7 @@ class DataGenSequence(Sequence):
         for i_batch in range(batch_size):
             sample = self.samples[i + i_batch]
             image_id = sample['image_id']
-            filename = os.path.join(self.image_folder, str(image_id) + '.jpg')
+            filename = os.path.join(self.image_folder, image_id)
             img = load_img(filename, target_size=(image_h, image_w))
             img_array = img_to_array(img)
             img_array = preprocess_input(img_array)
