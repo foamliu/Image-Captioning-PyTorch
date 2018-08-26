@@ -65,7 +65,7 @@ def language_model(wh, dim, convfeats, prev_words):
     x = Concatenate(name='lstm_in')([x, emb])
 
     # regular lstm
-    lstm_ = CuDNNLSTM(lstm_dim, return_sequences=False, stateful=True, name='h')
+    lstm_ = CuDNNLSTM(lstm_dim, return_sequences=True, stateful=True, name='h')
     h = lstm_(x)
 
     num_vfeats = wh * wh
@@ -138,7 +138,9 @@ def build_model():
 
 
 if __name__ == '__main__':
-    model = build_model()
+    import tensorflow as tf
+    with tf.device('/cpu:0'):
+        model = build_model()
     print(model.summary())
     plot_model(model, to_file='model.svg', show_layer_names=True, show_shapes=True)
 
