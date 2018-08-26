@@ -92,7 +92,7 @@ def language_model(wh, dim, convfeats, prev_words):
         # compute attention values
         att = TimeDistributed(Conv1D(1, 1, padding='same'), name='att')(z)
 
-        att = Reshape((1, num_vfeats), name='att_res')(att)
+        att = Reshape((max_token_length, num_vfeats), name='att_res')(att)
         # softmax activation
         att = TimeDistributed(Activation('softmax'), name='att_scores')(att)
         att = TimeDistributed(RepeatVector(z_dim), name='att_rep')(att)
