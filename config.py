@@ -1,6 +1,6 @@
 import os
 
-img_rows, img_cols, img_size = 224, 224, 224
+image_h = image_w = image_size = 256
 channel = 3
 batch_size = 256
 epochs = 10000
@@ -14,6 +14,14 @@ num_image_features = 2048
 hidden_size = 512
 L = 49
 D = 512
+cnn_type = 'resnet'
+emb_dim = 512
+z_dim = 512
+lstm_dim = 512
+dr_ratio = 0.5
+dr = False
+sgate = False
+attlstm = True
 
 train_folder = 'data/ai_challenger_caption_train_20170902'
 valid_folder = 'data/ai_challenger_caption_validation_20170910'
