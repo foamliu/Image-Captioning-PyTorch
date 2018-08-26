@@ -2,12 +2,12 @@
 import os
 import pickle
 
-import keras
 import numpy as np
 from keras.preprocessing import sequence
 from keras.preprocessing.image import (load_img, img_to_array)
 from keras.utils import Sequence
 from keras.utils import to_categorical
+
 from config import image_h, image_w, batch_size, max_token_length, vocab_size, train_image_folder, valid_image_folder, \
     cnn_type
 
@@ -39,7 +39,7 @@ class DataGenSequence(Sequence):
         np.random.shuffle(self.samples)
 
     def __len__(self):
-        return int(np.ceil(len(self.samples) / float(batch_size)))
+        return len(self.samples) // batch_size
 
     def __getitem__(self, idx):
         i = idx * batch_size
