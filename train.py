@@ -40,7 +40,7 @@ if __name__ == '__main__':
     if pretrained_path is not None:
         new_model.load_weights(pretrained_path)
 
-    new_model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    new_model.compile(optimizer='adam', loss='categorical_crossentropy', sample_weight_mode="temporal")
 
     print(new_model.summary())
 
