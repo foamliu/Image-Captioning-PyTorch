@@ -6,7 +6,7 @@ from keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
 from config import patience, epochs, num_train_samples, num_valid_samples, batch_size
 from data_generator import train_gen, valid_gen
 from model import build_model
-from utils import get_available_cpus, ensure_folder
+from utils import ensure_folder
 
 if __name__ == '__main__':
     # Parse arguments
@@ -55,6 +55,5 @@ if __name__ == '__main__':
                             epochs=epochs,
                             verbose=1,
                             callbacks=callbacks,
-                            use_multiprocessing=True,
-                            workers=get_available_cpus() // 2
+                            use_multiprocessing=False
                             )
