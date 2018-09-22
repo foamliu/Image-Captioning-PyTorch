@@ -8,7 +8,7 @@ from tqdm import tqdm
 from config import train_folder, train_annotations_filename
 
 if __name__ == '__main__':
-    print('Calculating the maximum length among all the captions')
+    print('Calculating the maximum length among all training captions')
     annotations_path = os.path.join(train_folder, train_annotations_filename)
 
     with open(annotations_path, 'r') as f:

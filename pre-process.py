@@ -21,30 +21,6 @@ def extract(folder):
         zip_ref.extractall('data')
 
 
-def build_train_vocab():
-    annotations_path = os.path.join(train_folder, train_annotations_filename)
-
-    with open(annotations_path, 'r') as f:
-        annotations = json.load(f)
-
-    print('building {} train vocab')
-    vocab = set()
-    for a in tqdm(annotations):
-        caption = a['caption']
-        for c in caption:
-            seg_list = jieba.cut(c)
-            for word in seg_list:
-                vocab.add(word)
-
-    vocab.add(start_word)
-    vocab.add(stop_word)
-    vocab.add(unknown_word)
-
-    filename = 'data/vocab_train.p'
-    with open(filename, 'wb') as encoded_pickle:
-        pickle.dump(vocab, encoded_pickle)
-
-
 def create_input_files(dataset, karpathy_json_path, image_folder, captions_per_image, min_word_freq, output_folder,
                        max_len=100):
     """
@@ -179,6 +155,30 @@ def create_input_files(dataset, karpathy_json_path, image_folder, captions_per_i
 
             with open(os.path.join(output_folder, split + '_CAPLENS_' + base_filename + '.json'), 'w') as j:
                 json.dump(caplens, j)
+
+
+def build_train_vocab():
+    annotations_path = os.path.join(train_folder, train_annotations_filename)
+
+    with open(annotations_path, 'r') as f:
+        annotations = json.load(f)
+
+    print('building {} train vocab')
+    vocab = set()
+    for a in tqdm(annotations):
+        caption = a['caption']
+        for c in caption:
+            seg_list = jieba.cut(c)
+            for word in seg_list:
+                vocab.add(word)
+
+    vocab.add(start_word)
+    vocab.add(stop_word)
+    vocab.add(unknown_word)
+
+    filename = 'data/vocab_train.p'
+    with open(filename, 'wb') as encoded_pickle:
+        pickle.dump(vocab, encoded_pickle)
 
 
 def build_samples(usage):
