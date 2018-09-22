@@ -9,7 +9,7 @@ import numpy as np
 from keras.preprocessing import sequence
 
 from config import max_token_length, start_word, stop_word, test_a_image_folder, img_rows, img_cols
-from model import build_model
+from models import build_model
 
 if __name__ == '__main__':
     channel = 3
