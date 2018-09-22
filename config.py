@@ -1,8 +1,8 @@
 import os
 
-image_h = image_w = image_size = 256
+image_h = image_w = image_size = 224
 channel = 3
-batch_size = 32
+batch_size = 1
 epochs = 10000
 patience = 10
 num_train_samples = 1050000
