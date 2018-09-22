@@ -6,9 +6,10 @@ import torchvision.transforms as transforms
 from torch import nn
 from torch.nn.utils.rnn import pack_padded_sequence
 from models import Encoder, DecoderWithAttention
-from datasets import *
+from data_generator import DataGenSequence
 from utils import *
 from nltk.translate.bleu_score import corpus_bleu
+import json
 
 # Data parameters
 data_folder = '/media/ssd/caption data'  # folder with data files saved by create_input_files.py
