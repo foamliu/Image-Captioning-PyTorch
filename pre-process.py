@@ -196,17 +196,17 @@ if __name__ == '__main__':
     # parameters
     ensure_folder('data')
 
-    # if not os.path.isdir(train_image_folder):
-    extract(train_folder)
+    if not os.path.isdir(train_image_folder):
+        extract(train_folder)
 
-    # if not os.path.isdir(valid_image_folder):
-    extract(valid_folder)
+    if not os.path.isdir(valid_image_folder):
+        extract(valid_folder)
 
-    # if not os.path.isdir(test_a_image_folder):
-    extract(test_a_folder)
+    if not os.path.isdir(test_a_image_folder):
+        extract(test_a_folder)
 
-    # if not os.path.isdir(test_b_image_folder):
-    extract(test_b_folder)
+    if not os.path.isdir(test_b_image_folder):
+        extract(test_b_folder)
 
     create_input_files('train')
 
