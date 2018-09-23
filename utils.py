@@ -2,20 +2,12 @@ import multiprocessing
 import os
 
 import cv2 as cv
-import tensorflow as tf
 import torch
-from tensorflow.python.client import device_lib
 
 
 def ensure_folder(folder):
     if not os.path.exists(folder):
         os.makedirs(folder)
-
-
-# getting the number of GPUs
-def get_available_gpus():
-    local_device_protos = device_lib.list_local_devices()
-    return [x.name for x in local_device_protos if x.device_type == 'GPU']
 
 
 # getting the number of CPUs

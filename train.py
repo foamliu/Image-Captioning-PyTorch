@@ -28,18 +28,17 @@ def main():
 
     # Initialize / load checkpoint
     if checkpoint is None:
-        gpu_list = range(len(get_available_gpus()))
         decoder = DecoderWithAttention(attention_dim=attention_dim,
                                        embed_dim=emb_dim,
                                        decoder_dim=decoder_dim,
                                        vocab_size=len(word_map),
                                        dropout=dropout)
-        decoder = torch.nn.DataParallel(decoder, gpu_list).cuda()
+        decoder = torch.nn.DataParallel(decoder.cuda(), device_ids=[0, 1, 2, 3])
         decoder_optimizer = torch.optim.Adam(params=filter(lambda p: p.requires_grad, decoder.parameters()),
                                              lr=decoder_lr)
         encoder = Encoder()
         encoder.fine_tune(fine_tune_encoder)
-        encoder = torch.nn.DataParallel(encoder, gpu_list).cuda()
+        encoder = torch.nn.DataParallel(encoder.cuda(), device_ids=[0, 1, 2, 3])
         encoder_optimizer = torch.optim.Adam(params=filter(lambda p: p.requires_grad, encoder.parameters()),
                                              lr=encoder_lr) if fine_tune_encoder else None
 
