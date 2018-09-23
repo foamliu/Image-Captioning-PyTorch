@@ -12,6 +12,8 @@ num_train_samples = 1050000
 num_valid_samples = 150000
 vocab_size = 17628
 max_token_length = 40
+max_len = 40
+captions_per_image = 5
 
 # Model parameters
 emb_dim = 512  # dimension of word embeddings
