@@ -5,12 +5,10 @@ import torch.backends.cudnn as cudnn
 
 image_h = image_w = image_size = 256
 channel = 3
-batch_size = 1
 epochs = 10000
 patience = 10
 num_train_samples = 1050000
 num_valid_samples = 150000
-max_token_length = 40
 max_len = 40
 captions_per_image = 5
 
@@ -19,7 +17,7 @@ emb_dim = 512  # dimension of word embeddings
 attention_dim = 512  # dimension of attention linear layers
 decoder_dim = 512  # dimension of decoder RNN
 dropout = 0.5
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu:0')  # sets device for model and PyTorch tensors
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')  # sets device for model and PyTorch tensors
 cudnn.benchmark = True  # set to true only if inputs to model are fixed size; otherwise lot of computational overhead
 
 # Training parameters
@@ -51,7 +49,3 @@ train_annotations_filename = os.path.join(train_folder, 'caption_train_annotatio
 valid_annotations_filename = os.path.join(valid_folder, 'caption_validation_annotations_20170910.json')
 test_a_annotations_filename = os.path.join(test_a_folder, 'caption_test_a_annotations_20180103.json')
 test_b_annotations_filename = os.path.join(test_b_folder, 'caption_test_b_annotations_20180103.json')
-
-start_word = '<start>'
-stop_word = '<end>'
-unknown_word = '<unk>'
