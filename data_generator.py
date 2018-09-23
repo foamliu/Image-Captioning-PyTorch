@@ -9,7 +9,8 @@ from torch.utils.data import Dataset
 from config import *
 
 
-def encode_captions(word_map, c):
+def encode_caption(word_map, c):
+    c = list(c)
     return [word_map['<start>']] + [word_map.get(word, word_map['<unk>']) for word in c] + [
         word_map['<end>']] + [word_map['<pad>']] * (max_len - len(c))
 
@@ -72,9 +73,9 @@ class CaptionDataset(Dataset):
         # Sanity check
         assert len(captions) == captions_per_image
         c = captions[i % captions_per_image]
-        c = jieba.cut(c, cut_all=True)
+        c = jieba.cut(c)
         # Encode captions
-        enc_c = encode_captions(self.word_map, c)
+        enc_c = encode_caption(self.word_map, c)
 
         caption = torch.LongTensor(enc_c)
 
@@ -84,7 +85,7 @@ class CaptionDataset(Dataset):
             return img, caption, caplen
         else:
             # For validation of testing, also return all 'captions_per_image' captions to find BLEU-4 score
-            all_captions = torch.LongTensor([encode_captions(self.word_map, c) for c in captions])
+            all_captions = torch.LongTensor([encode_caption(self.word_map, jieba.cut(c)) for c in captions])
             return img, caption, caplen, all_captions
 
     def __len__(self):
