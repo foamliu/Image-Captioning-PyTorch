@@ -10,7 +10,6 @@ from config import *
 
 
 def encode_caption(word_map, c):
-    c = list(c)
     return [word_map['<start>']] + [word_map.get(word, word_map['<unk>']) for word in c] + [
         word_map['<end>']] + [word_map['<pad>']] * (max_len - len(c))
 
@@ -73,7 +72,7 @@ class CaptionDataset(Dataset):
         # Sanity check
         assert len(captions) == captions_per_image
         c = captions[i % captions_per_image]
-        c = jieba.cut(c)
+        c = list(jieba.cut(c))
         # Encode captions
         enc_c = encode_caption(self.word_map, c)
 
