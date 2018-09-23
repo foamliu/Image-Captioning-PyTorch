@@ -1,12 +1,12 @@
-import torch.backends.cudnn as cudnn
+import torch.nn.functional as F
 import torch.optim
 import torch.utils.data
 import torchvision.transforms as transforms
-from datasets import *
-from utils import *
 from nltk.translate.bleu_score import corpus_bleu
-import torch.nn.functional as F
 from tqdm import tqdm
+
+from data_generator import *
+from utils import *
 
 # Parameters
 data_folder = '/media/ssd/caption data'  # folder with data files saved by create_input_files.py
