@@ -19,7 +19,7 @@ class CaptionDataset(Dataset):
     A PyTorch Dataset class to be used in a PyTorch DataLoader to create batches.
     """
 
-    def __init__(self, data_folder, data_name, split, transform=None):
+    def __init__(self, split, transform=None):
         """
         :param data_folder: folder where data files are stored
         :param data_name: base name of processed datasets
