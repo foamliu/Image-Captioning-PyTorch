@@ -2,7 +2,6 @@ import json
 import pickle
 import zipfile
 from collections import Counter
-from random import seed, choice
 
 import h5py
 import jieba
@@ -73,69 +72,61 @@ def create_input_files(split, captions_per_image=5, min_word_freq=3, output_fold
     # Save word map to a JSON
     with open(os.path.join(output_folder, 'WORDMAP_' + split + '.json'), 'w') as j:
         json.dump(word_map, j)
-    #
-    # # Sample captions for each image, save images to HDF5 file, and captions and their lengths to JSON files
-    # seed(123)
-    # for impaths, imcaps, split in [(train_image_paths, train_image_captions, 'TRAIN'),
-    #                                (val_image_paths, val_image_captions, 'VAL'),
-    #                                (test_image_paths, test_image_captions, 'TEST')]:
-    #
-    #     with h5py.File(os.path.join(output_folder, split + '_IMAGES_' + base_filename + '.hdf5'), 'a') as h:
-    #         # Make a note of the number of captions we are sampling per image
-    #         h.attrs['captions_per_image'] = captions_per_image
-    #
-    #         # Create dataset inside HDF5 file to store images
-    #         images = h.create_dataset('images', (len(impaths), 3, 256, 256), dtype='uint8')
-    #
-    #         print("\nReading %s images and captions, storing to file...\n" % split)
-    #
-    #         enc_captions = []
-    #         caplens = []
-    #
-    #         for i, path in enumerate(tqdm(impaths)):
-    #
-    #             # Sample captions
-    #             if len(imcaps[i]) < captions_per_image:
-    #                 captions = imcaps[i] + [choice(imcaps[i]) for _ in range(captions_per_image - len(imcaps[i]))]
-    #             else:
-    #                 captions = sample(imcaps[i], k=captions_per_image)
-    #
-    #             # Sanity check
-    #             assert len(captions) == captions_per_image
-    #
-    #             # Read images
-    #             img = imread(impaths[i])
-    #             if len(img.shape) == 2:
-    #                 img = img[:, :, np.newaxis]
-    #                 img = np.concatenate([img, img, img], axis=2)
-    #             img = imresize(img, (256, 256))
-    #             img = img.transpose(2, 0, 1)
-    #             assert img.shape == (3, 256, 256)
-    #             assert np.max(img) <= 255
-    #
-    #             # Save image to HDF5 file
-    #             images[i] = img
-    #
-    #             for j, c in enumerate(captions):
-    #                 # Encode captions
-    #                 enc_c = [word_map['<start>']] + [word_map.get(word, word_map['<unk>']) for word in c] + [
-    #                     word_map['<end>']] + [word_map['<pad>']] * (max_len - len(c))
-    #
-    #                 # Find caption lengths
-    #                 c_len = len(c) + 2
-    #
-    #                 enc_captions.append(enc_c)
-    #                 caplens.append(c_len)
-    #
-    #         # Sanity check
-    #         assert images.shape[0] * captions_per_image == len(enc_captions) == len(caplens)
-    #
-    #         # Save encoded captions and their lengths to JSON files
-    #         with open(os.path.join(output_folder, split + '_CAPTIONS_' + base_filename + '.json'), 'w') as j:
-    #             json.dump(enc_captions, j)
-    #
-    #         with open(os.path.join(output_folder, split + '_CAPLENS_' + base_filename + '.json'), 'w') as j:
-    #             json.dump(caplens, j)
+
+    # Sample captions for each image, save images to HDF5 file, and captions and their lengths to JSON files
+    with h5py.File(os.path.join(output_folder, split + '_IMAGES' + '.hdf5'), 'a') as h:
+        # Make a note of the number of captions we are sampling per image
+        h.attrs['captions_per_image'] = captions_per_image
+
+        # Create dataset inside HDF5 file to store images
+        images = h.create_dataset('images', (len(samples), 3, 256, 256), dtype='uint8')
+
+        print("\nReading %s images and captions, storing to file...\n" % split)
+
+        enc_captions = []
+        caplens = []
+        for i, sample in enumerate(tqdm(samples)):
+            path = os.path.join(image_folder, sample['image_id'])
+
+            # Sample captions
+            captions = sample['caption']
+
+            # Sanity check
+            assert len(captions) == captions_per_image
+
+            # Read images
+            img = imread(path)
+            if len(img.shape) == 2:
+                img = img[:, :, np.newaxis]
+                img = np.concatenate([img, img, img], axis=2)
+            img = imresize(img, (256, 256))
+            img = img.transpose(2, 0, 1)
+            assert img.shape == (3, 256, 256)
+            assert np.max(img) <= 255
+
+            # Save image to HDF5 file
+            images[i] = img
+
+            for j, c in enumerate(captions):
+                # Encode captions
+                enc_c = [word_map['<start>']] + [word_map.get(word, word_map['<unk>']) for word in c] + [
+                    word_map['<end>']] + [word_map['<pad>']] * (max_len - len(c))
+
+                # Find caption lengths
+                c_len = len(c) + 2
+
+                enc_captions.append(enc_c)
+                caplens.append(c_len)
+
+        # Sanity check
+        assert images.shape[0] * captions_per_image == len(enc_captions) == len(caplens)
+
+        # Save encoded captions and their lengths to JSON files
+        with open(os.path.join(output_folder, split + '_CAPTIONS' + '.json'), 'w') as j:
+            json.dump(enc_captions, j)
+
+        with open(os.path.join(output_folder, split + '_CAPLENS' + '.json'), 'w') as j:
+            json.dump(caplens, j)
 
 
 def build_train_vocab():
@@ -215,8 +206,8 @@ if __name__ == '__main__':
 
     create_input_files('train')
     create_input_files('valid')
-    create_input_files('test-a')
-    create_input_files('test-b')
+    # create_input_files('test-a')
+    # create_input_files('test-b')
 
     # if not os.path.isfile('data/vocab_train.p'):
     #     build_train_vocab()
