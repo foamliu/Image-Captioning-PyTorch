@@ -62,6 +62,9 @@ def create_input_files(split, captions_per_image=5, min_word_freq=3, output_fold
     word_map['<end>'] = len(word_map) + 1
     word_map['<pad>'] = 0
 
+    print(len(word_map))
+    print(words[:10])
+
     # Save word map to a JSON
     with open(os.path.join(output_folder, 'WORDMAP_' + split + '.json'), 'w') as j:
         json.dump(word_map, j)
