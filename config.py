@@ -3,7 +3,7 @@ import os
 import torch
 import torch.backends.cudnn as cudnn
 
-image_h = image_w = image_size = 224
+image_h = image_w = image_size = 256
 channel = 3
 batch_size = 1
 epochs = 10000

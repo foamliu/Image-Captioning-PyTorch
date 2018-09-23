@@ -232,11 +232,11 @@ if __name__ == '__main__':
     # if not os.path.isdir(test_b_image_folder):
     extract(test_b_folder)
 
-    if not os.path.isfile('data/vocab_train.p'):
-        build_train_vocab()
-
-    if not os.path.isfile('data/samples_train.p'):
-        build_samples('train')
-
-    if not os.path.isfile('data/samples_valid.p'):
-        build_samples('valid')
+    # if not os.path.isfile('data/vocab_train.p'):
+    #     build_train_vocab()
+    #
+    # if not os.path.isfile('data/samples_train.p'):
+    #     build_samples('train')
+    #
+    # if not os.path.isfile('data/samples_valid.p'):
+    #     build_samples('valid')
