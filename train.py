@@ -38,8 +38,8 @@ def main():
         decoder_optimizer = torch.optim.Adam(params=filter(lambda p: p.requires_grad, decoder.parameters()),
                                              lr=decoder_lr)
         encoder = Encoder()
-        encoder = torch.nn.DataParallel(encoder, gpu_list).cuda()
         encoder.fine_tune(fine_tune_encoder)
+        encoder = torch.nn.DataParallel(encoder, gpu_list).cuda()
         encoder_optimizer = torch.optim.Adam(params=filter(lambda p: p.requires_grad, encoder.parameters()),
                                              lr=encoder_lr) if fine_tune_encoder else None
 
