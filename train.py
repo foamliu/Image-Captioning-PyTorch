@@ -28,7 +28,7 @@ def main():
 
     # Initialize / load checkpoint
     if checkpoint is None:
-        gpu_list = range(get_available_gpus())
+        gpu_list = range(len(get_available_gpus()))
         decoder = DecoderWithAttention(attention_dim=attention_dim,
                                        embed_dim=emb_dim,
                                        decoder_dim=decoder_dim,
