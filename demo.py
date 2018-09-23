@@ -1,5 +1,4 @@
 # import the necessary packages
-import os
 import pickle
 import random
 
@@ -8,8 +7,7 @@ import keras.backend as K
 import numpy as np
 from keras.preprocessing import sequence
 
-from config import max_token_length, start_word, stop_word, test_a_image_folder, img_rows, img_cols
-from models import build_model
+from config import *
 
 if __name__ == '__main__':
     channel = 3
