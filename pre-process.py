@@ -38,6 +38,12 @@ def create_input_files(split, captions_per_image=5, min_word_freq=3, output_fold
     elif split == 'valid':
         json_path = valid_annotations_filename
         image_folder = valid_image_folder
+    elif split == 'test-a':
+        json_path = test_a_annotations_filename
+        image_folder = test_a_image_folder
+    else:
+        json_path = test_b_annotations_filename
+        image_folder = test_b_image_folder
 
     # Read JSON
     with open(json_path, 'r') as j:
@@ -47,7 +53,6 @@ def create_input_files(split, captions_per_image=5, min_word_freq=3, output_fold
     word_freq = Counter()
 
     for sample in tqdm(samples):
-        captions = []
         caption = sample['caption']
         for c in caption:
             seg_list = jieba.cut(c, cut_all=True)
@@ -209,8 +214,9 @@ if __name__ == '__main__':
         extract(test_b_folder)
 
     create_input_files('train')
-
     create_input_files('valid')
+    create_input_files('test-a')
+    create_input_files('test-b')
 
     # if not os.path.isfile('data/vocab_train.p'):
     #     build_train_vocab()
