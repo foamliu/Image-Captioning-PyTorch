@@ -22,7 +22,7 @@ def main():
     global best_bleu4, epochs_since_improvement, checkpoint, start_epoch, fine_tune_encoder, word_map
 
     # Read word map
-    word_map_file = os.path.join(data_folder, 'WORDMAP_train.json')
+    word_map_file = os.path.join(data_folder, 'WORDMAP.json')
     with open(word_map_file, 'r') as j:
         word_map = json.load(j)
 
