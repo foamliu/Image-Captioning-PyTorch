@@ -25,7 +25,7 @@ class CaptionDataset(Dataset):
         :param transform: image transform pipeline
         """
         self.split = split
-        assert self.split in {'train', 'valid', 'test-a', 'test-b'}
+        assert self.split in {'train', 'valid'}
 
         if split == 'train':
             json_path = train_annotations_filename
@@ -39,7 +39,7 @@ class CaptionDataset(Dataset):
             self.samples = json.load(j)
 
         # Read wordmap
-        with open(os.path.join(data_folder, 'WORDMAP_' + split + '.json'), 'r') as j:
+        with open(os.path.join(data_folder, 'WORDMAP.json'), 'r') as j:
             self.word_map = json.load(j)
 
         # PyTorch transformation pipeline for the image (normalizing, etc.)
