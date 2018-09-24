@@ -16,25 +16,8 @@ def extract(folder):
         zip_ref.extractall('data')
 
 
-def create_input_files(split, min_word_freq=3):
-    """
-    Creates input files for training, validation, and test data.
-    :param json_path: path of JSON file with captions
-    :param image_folder: folder with downloaded images
-    :param captions_per_image: number of captions to sample per image
-    :param min_word_freq: words occuring less frequently than this threshold are binned as <unk>s
-    :param output_folder: folder to save files
-    :param max_len: don't sample captions longer than this length
-    """
-
-    if split == 'train':
-        json_path = train_annotations_filename
-    elif split == 'valid':
-        json_path = valid_annotations_filename
-    elif split == 'test-a':
-        json_path = test_a_annotations_filename
-    else:
-        json_path = test_b_annotations_filename
+def create_input_files():
+    json_path = train_annotations_filename
 
     # Read JSON
     with open(json_path, 'r') as j:
