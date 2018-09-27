@@ -3,6 +3,9 @@ import json
 
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
+font_name = "STKaiti"
+plt.rcParams['font.family']=font_name
+plt.rcParams['axes.unicode_minus']=False # in case minus sign is shown as box
 import numpy as np
 import skimage.transform
 import torch
