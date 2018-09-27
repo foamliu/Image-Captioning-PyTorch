@@ -1,6 +1,10 @@
 # 图像中文描述
 
-图像中文描述 + 视觉注意力
+图像中文描述 + 视觉注意力的 PyTorch 实现。
+
+[Show, Attend, and Tell](https://arxiv.org/pdf/1502.03044.pdf) 是令人惊叹的工作，[这里](https://github.com/kelvinxu/arctic-captions)是作者的原始实现。
+
+这个模型学会了“往哪瞅”：当模型逐词生成标题时，模型的目光在图像上移动以专注于跟下一个词最相关的部分。
 
 ## 依赖
 - [NumPy](http://docs.scipy.org/doc/numpy-1.10.1/user/install.html)
