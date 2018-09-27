@@ -1,11 +1,8 @@
 import argparse
 import json
 
-import matplotlib
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
-
-matplotlib.use('Agg')
 import numpy as np
 import skimage.transform
 import torch
