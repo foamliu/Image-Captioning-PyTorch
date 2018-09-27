@@ -1,12 +1,12 @@
 import argparse
 import json
 
+import matplotlib
+
+matplotlib.rcParams['font.family'] = 'WenQuanYi Zen Hei Mono'
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 
-font_name = "WenQuanYi Bitmap Song"
-plt.rcParams['font.family'] = font_name
-plt.rcParams['axes.unicode_minus'] = False  # in case minus sign is shown as box
 import numpy as np
 import skimage.transform
 import torch
