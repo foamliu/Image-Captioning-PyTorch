@@ -188,7 +188,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--img', '-i', help='path to image')
     parser.add_argument('--model', '-m', default='BEST_checkpoint_.pth.tar', help='path to model')
-    parser.add_argument('--word_map', '-wm', default='WORDMAP.json', help='path to word map JSON')
+    parser.add_argument('--word_map', '-wm', default='data/WORDMAP.json', help='path to word map JSON')
     parser.add_argument('--beam_size', '-b', default=5, type=int, help='beam size for beam search')
     parser.add_argument('--dont_smooth', dest='smooth', action='store_false', help='do not smooth alpha overlay')
 
