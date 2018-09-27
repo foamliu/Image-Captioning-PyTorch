@@ -214,11 +214,12 @@ if __name__ == '__main__':
 
     from config import *
     import random
+    from tqdm import tqdm
 
     images = [os.path.join(test_a_image_folder, f) for f in os.listdir(test_a_image_folder) if f.endswith('.jpg')]
     images = random.sample(images, 10)
 
-    for i in range(10):
+    for i in tqdm(range(10)):
         img = images[i]
 
         # Encode, decode with attention and beam search
