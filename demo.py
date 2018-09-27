@@ -216,17 +216,10 @@ if __name__ == '__main__':
     rev_word_map = {v: k for k, v in word_map.items()}  # ix2word
 
     from config import *
-    import random
     from tqdm import tqdm
-    from shutil import copyfile
-
-    images = [os.path.join(test_a_image_folder, f) for f in os.listdir(test_a_image_folder) if f.endswith('.jpg')]
-    images = random.sample(images, 10)
 
     for i in tqdm(range(10)):
-        img = images[i]
-
-        copyfile(img, 'images/image_{}.jpg'.format(i))
+        img = 'images/image_{}.jpg'.format(i)
 
         # Encode, decode with attention and beam search
         seq, alphas = caption_image_beam_search(encoder, decoder, img, word_map, args.beam_size)
