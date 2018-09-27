@@ -1,12 +1,13 @@
-#coding:utf-8
+# coding:utf-8
 import argparse
 import json
 
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 
+plt.rcParams['font.sans-serif'] = ['WenQuanYi Micro Hei Mono']
 plt.rcParams['font.family'] = 'sans-serif'
-plt.rcParams['font.sans-serif'] = 'WenQuanYi Micro Hei Mono'
+plt.rcParams['axes.unicode_minus'] = False
 import numpy as np
 import skimage.transform
 import torch
