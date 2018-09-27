@@ -47,7 +47,6 @@ $ tensorboard --logdir path_to_current_dir/logs
 $ python demo.py
 ```
 
-1 | 2 |
+原图 | 注意力 |
 |---|---|
-|原图|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/image_0.jpg) | 
-|注意力|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/out_0.jpg) | 
+|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/image_0.jpg)|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/out_0.jpg) | 
