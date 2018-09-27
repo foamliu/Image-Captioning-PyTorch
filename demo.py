@@ -226,7 +226,7 @@ if __name__ == '__main__':
     for i in tqdm(range(10)):
         img = images[i]
 
-        copyfile(img, 'images/image_{}.jpg')
+        copyfile(img, 'images/image_{}.jpg'.format(i))
 
         # Encode, decode with attention and beam search
         seq, alphas = caption_image_beam_search(encoder, decoder, img, word_map, args.beam_size)
