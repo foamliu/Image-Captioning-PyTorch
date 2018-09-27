@@ -50,3 +50,12 @@ $ python demo.py
 原图 | 注意力 |
 |---|---|
 |<img src="https://github.com/foamliu/Image-Captioning-v2/raw/master/images/image_0.jpg" width="400" />|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/out_0.jpg) | 
+|<img src="https://github.com/foamliu/Image-Captioning-v2/raw/master/images/image_1.jpg" width="400" />|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/out_1.jpg) |
+|<img src="https://github.com/foamliu/Image-Captioning-v2/raw/master/images/image_2.jpg" width="400" />|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/out_2.jpg) |
+|<img src="https://github.com/foamliu/Image-Captioning-v2/raw/master/images/image_3.jpg" width="400" />|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/out_3.jpg) |
+|<img src="https://github.com/foamliu/Image-Captioning-v2/raw/master/images/image_4.jpg" width="400" />|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/out_4.jpg) |
+|<img src="https://github.com/foamliu/Image-Captioning-v2/raw/master/images/image_5.jpg" width="400" />|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/out_5.jpg) |
+|<img src="https://github.com/foamliu/Image-Captioning-v2/raw/master/images/image_6.jpg" width="400" />|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/out_6.jpg) |
+|<img src="https://github.com/foamliu/Image-Captioning-v2/raw/master/images/image_7.jpg" width="400" />|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/out_7.jpg) |
+|<img src="https://github.com/foamliu/Image-Captioning-v2/raw/master/images/image_8.jpg" width="400" />|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/out_8.jpg) |
+|<img src="https://github.com/foamliu/Image-Captioning-v2/raw/master/images/image_9.jpg" width="400" />|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/out_9.jpg) |
