@@ -49,4 +49,4 @@ $ python demo.py
 
 原图 | 注意力 |
 |---|---|
-|<img src="https://github.com/foamliu/Image-Captioning-v2/raw/master/images/image_0.jpg" width="400" height="300" />|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/out_0.jpg) | 
+|<img src="https://github.com/foamliu/Image-Captioning-v2/raw/master/images/image_0.jpg" width="400" />|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/out_0.jpg) | 
