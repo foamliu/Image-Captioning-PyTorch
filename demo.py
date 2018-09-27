@@ -149,7 +149,7 @@ def caption_image_beam_search(encoder, decoder, image_path, word_map, beam_size=
     return seq, alphas
 
 
-def visualize_att(image_path, seq, alphas, rev_word_map, smooth=True):
+def visualize_att(image_path, seq, alphas, rev_word_map, i, smooth=True):
     """
     Visualizes caption with weights at every word.
     Adapted from paper authors' repo: https://github.com/kelvinxu/arctic-captions/blob/master/alpha_visualization.ipynb
@@ -183,7 +183,8 @@ def visualize_att(image_path, seq, alphas, rev_word_map, smooth=True):
             plt.imshow(alpha, alpha=0.8)
         plt.set_cmap(cm.Greys_r)
         plt.axis('off')
-    plt.show()
+    # plt.show()
+    plt.savefig('out_{}.jpg'.format(i))
 
 
 if __name__ == '__main__':
@@ -211,9 +212,18 @@ if __name__ == '__main__':
         word_map = json.load(j)
     rev_word_map = {v: k for k, v in word_map.items()}  # ix2word
 
-    # Encode, decode with attention and beam search
-    seq, alphas = caption_image_beam_search(encoder, decoder, args.img, word_map, args.beam_size)
-    alphas = torch.FloatTensor(alphas)
+    from config import *
+    import random
 
-    # Visualize caption and attention of best sequence
-    visualize_att(args.img, seq, alphas, rev_word_map, args.smooth)
+    images = [os.path.join(test_a_image_folder, f) for f in os.listdir(test_a_image_folder) if f.endswith('.jpg')]
+    images = random.sample(images, 10)
+
+    for i in range(10):
+        img = images[i]
+
+        # Encode, decode with attention and beam search
+        seq, alphas = caption_image_beam_search(encoder, decoder, img, word_map, args.beam_size)
+        alphas = torch.FloatTensor(alphas)
+
+        # Visualize caption and attention of best sequence
+        visualize_att(img, seq, alphas, rev_word_map, i, args.smooth)
