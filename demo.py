@@ -3,7 +3,7 @@ import json
 
 import matplotlib
 
-matplotlib.rcParams['font.family'] = 'WenQuanYi Zen Hei Mono'
+matplotlib.rcParams['font.sans-serif'] = 'WenQuanYi Zen Hei Mono'
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 
