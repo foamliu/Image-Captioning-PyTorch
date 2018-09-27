@@ -47,15 +47,7 @@ $ tensorboard --logdir path_to_current_dir/logs
 $ python demo.py
 ```
 
-1 | 2 | 3 | 4 |
-|---|---|---|---|
-|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/0_image.png)  | ![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/1_image.png) | ![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/2_image.png)| ![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/3_image.png) |
-|一个 穿着 球衣 的 男人 和 一个 穿着 球衣 的 运动员 在 翠绿 的 球场上 抢 足球 | 室外 有 一个 穿着 深色 上衣 的 男人 在 给 一个 穿着 深色 上衣 的 男人 做 食物 | 一个 穿着 球衣 的 男人 在 运动场 上 打篮球 | 一个 穿着 黑色 裤子 的 男人 坐在 道路 上 的 汽车 上 |
-|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/4_image.png)  | ![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/5_image.png) | ![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/6_image.png)| ![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/7_image.png) |
-|球场上 有 三个 穿着 球衣 的 男人 在 踢足球 | 两个 穿着 深色 上衣 的 男人 在 室内 的 桌子 旁 交谈 | 大厅 里 一群 人 的 旁边 有 一个 穿着 黑色 裤子 的 男人 在 看 手机 | 一个 穿着 短裤 的 男人 站 在 海边 的 沙滩 上 |
-|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/8_image.png)  | ![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/9_image.png) |![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/10_image.png) | ![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/11_image.png)|
-|一个 穿着 黑色 裤子 的 男人 和 一个 穿着 裙子 的 女人 行走 在 道路 上 | 一个 右手 拿 着 球拍 的 男人 在 球场上 打网球 | 一群 人 的 旁边 有 一个 穿着 黑色 裤子 的 女人 坐在 室内 的 椅子 上 | 两个 穿着 球衣 的 男人 在 球场上 打篮球 |
-|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/12_image.png)  | ![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/13_image.png) |![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/14_image.png)| ![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/15_image.png)|
-|两个 穿着 球衣 的 女人 在 翠绿 的 草地 上 抢 足球|一个 穿着 黑色 裤子 的 男人 和 一个 穿着 裙子 的 女人 站 在 展板 前|房间 里 有 一个 穿着 黑色 上衣 的 男人 在 给 一个 坐在 椅子 上 的 女人 做 运动|一个 戴着 墨镜 的 女人 和 一个 穿着 黑色 裤子 的 女人 走 在 道路 上|
-|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/16_image.png) | ![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/17_image.png) | ![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/18_image.png) | ![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/19_image.png) |
-|一个 穿着 裙子 的 女人 站 在 地 的 道路 上|一个 穿着 白色 上衣 的 女人 坐在 室外 的 空地 上|一个 穿着 球衣 的 男人 在 球场上 踢足球|一个 穿着 深色 上衣 的 男人 和 一个 穿着 浅色 上衣 的 女人 在 草地 上 玩耍|
+1 | 2 |
+|---|---|
+|原图|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/image_0.png) | 
+|注意力|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/out_0.png) | 
