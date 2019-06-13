@@ -17,7 +17,7 @@
 
  ![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/dataset.png)
 
-下载点这里：[图像中文描述数据集](https://challenger.ai/datasets/caption)，放在 data 目录下。
+下载点这里：[图像中文描述数据集](https://challenger.ai/datasets/)，放在 data 目录下。
 
 
 ## 网络结构
