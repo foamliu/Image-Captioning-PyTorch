@@ -73,7 +73,7 @@ def main():
         batch_size=batch_size, shuffle=True, num_workers=workers, pin_memory=True)
     val_loader = torch.utils.data.DataLoader(
         CaptionDataset('valid', transform=transforms.Compose([normalize])),
-        batch_size=batch_size, shuffle=True, num_workers=workers, pin_memory=True)
+        batch_size=batch_size, shuffle=False, num_workers=workers, pin_memory=True)
 
     # Epochs
     for epoch in range(start_epoch, epochs):
