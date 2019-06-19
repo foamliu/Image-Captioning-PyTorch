@@ -43,7 +43,7 @@ $ tensorboard --logdir path_to_current_dir/logs
 ```
 
 ### 演示
-下载 [预训练模型](https://github.com/foamliu/Image-Captioning-v2/releases/download/v1.0/model.85-0.7657.hdf5) 放在 models 目录，然后执行:
+下载 [预训练模型](https://github.com/foamliu/Image-Captioning-v2/releases/download/v1.0/BEST_checkpoint_.pth.tar) 放在 models 目录，然后执行:
 
 ```bash
 $ python demo.py
