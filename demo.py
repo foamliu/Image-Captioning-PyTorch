@@ -1,4 +1,11 @@
-# coding:utf-8
+#!/usr/bin/env python
+#coding:utf-8
+"""a demo of matplotlib"""
+import matplotlib as  mpl
+from matplotlib  import pyplot as plt
+mpl.rcParams[u'font.sans-serif'] = ['simhei']
+mpl.rcParams['axes.unicode_minus'] = False
+
 import argparse
 import json
 
