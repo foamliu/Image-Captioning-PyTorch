@@ -29,7 +29,7 @@
 ### 数据预处理
 提取210,000 张训练图片和30,000 张验证图片：
 ```bash
-$ python pre-process.py
+$ python pre_process.py
 ```
 
 ### 训练
@@ -61,3 +61,13 @@ $ python demo.py
 |<img src="https://github.com/foamliu/Image-Captioning-v2/raw/master/images/image_7.jpg" width="400" />|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/out_7.jpg) |
 |<img src="https://github.com/foamliu/Image-Captioning-v2/raw/master/images/image_8.jpg" width="400" />|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/out_8.jpg) |
 |<img src="https://github.com/foamliu/Image-Captioning-v2/raw/master/images/image_9.jpg" width="400" />|![image](https://github.com/foamliu/Image-Captioning-v2/raw/master/images/out_9.jpg) |
+
+## 小小的赞助~
+<p align="center">
+	<img src="https://github.com/foamliu/Image-Captioning-PyTorch/blob/master/sponsor.jpg" alt="Sample"  width="324" height="504">
+	<p align="center">
+		<em>若对您有帮助可给予小小的赞助~</em>
+	</p>
+</p>
+<br/><br/><br/>
+
